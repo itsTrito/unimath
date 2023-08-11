@@ -1,3 +1,5 @@
+package unimath.util;
+
 public class UnitUtils {
     public static double radToDeg(double radian) {
         return (radian * 180) / Math.PI;

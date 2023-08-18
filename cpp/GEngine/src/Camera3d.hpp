@@ -13,8 +13,8 @@
 
 #include <SDL2/SDL_opengl.h>
 
-#include "Matrix44D.hpp"
-#include "Vector3D.hpp"
+#include "math/Matrix44D.hpp"
+#include "math/Vector3D.hpp"
 #include "design/Observer_Observable.hpp"
 
 namespace GEngine {

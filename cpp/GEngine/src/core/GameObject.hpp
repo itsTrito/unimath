@@ -1,8 +1,6 @@
 #ifndef GAMEOBJECT_HPP
 #define GAMEOBJECT_HPP
 
-#include <vector>
-
 #include "Component.hpp"
 #include "LifeCycleObject.hpp"
 #include "Transform.hpp"
@@ -10,30 +8,34 @@
 namespace GEngine {
 class GameObject : public LifeCycleObject {
    protected:
-    Transform transform;
+    Transform *transform;
     bool inited = false;
     std::vector<GameObject> children;
     std::vector<Component *> components;
 
    public:
     GameObject() {
-        this->transform = Transform();
+        this->transform = new Transform();
         this->children = std::vector<GameObject>();
         this->components = std::vector<Component *>();
     }
 
-    GameObject(std::vector<GameObject> gameObjects) {
-        this->transform = Transform();
+    GameObject(Transform *transform, std::vector<GameObject> gameObjects, std::vector<Component *> components) {
+        this->transform = transform;
         this->children = vector<GameObject>();
         for (int i = 0; i < gameObjects.size(); i++) {
             this->children.push_back(gameObjects[i]);
         }
         this->components = std::vector<Component *>();
-        // this->components = new Component[components.size()];
-        // for (int i = 0; i < components.size(); i++) {
-        //     this->components[i] = components[i];
-        // }
+        for (int i = 0; i < components.size(); i++) {
+            components[i]->setGameObjectTransform(transform);
+            this->components.push_back(components[i]);
+        }
     }
+
+    // ~GameObject() {
+    //     delete transform;
+    // }
 
     void Init() {
         for (auto component : components) {
@@ -88,6 +90,7 @@ class GameObject : public LifeCycleObject {
         for (int i = 0; i < children.size(); i++) {
             children[i].Destroy();
         }
+        // delete this;
     }
 
     void addChild(GameObject child) {
@@ -99,7 +102,7 @@ class GameObject : public LifeCycleObject {
     }
 
     Transform *getTransform() {
-        return &this->transform;
+        return this->transform;
     }
 };
 }  // namespace GEngine

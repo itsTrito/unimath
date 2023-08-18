@@ -8,14 +8,15 @@
 #include "EventContainer.hpp"
 #include "EventDispatcher.hpp"
 #include "FirstPersonCamera.hpp"
-#include "Matrix44D.hpp"
 #include "Renderer3D.hpp"
 #include "Text.hpp"
-#include "Vector3D.hpp"
 #include "components/TexturedMesh.hpp"
 #include "core/GameObject.hpp"
 #include "core/Scene.hpp"
 #include "handlers/RenderHandler.hpp"
+#include "math/Matrix44D.hpp"
+#include "math/Vector3D.hpp"
+#include "scripts/TestScene.hpp"
 
 using namespace std;
 
@@ -26,7 +27,6 @@ class Engine3D : public Engine<Engine3D> {
     FirstPersonCamera cam;  // = FirstPersonCamera(Vector3D(0.0,0.0,-1.0), Vector3D(0.0,0.0,1.0), Vector3D(0.0,1.0,0.0));
     // Observable keyDown, keyUp;
     EventDispatcher eventDispatcher;
-    TexturedMesh* mesh;
     Chrono chrono;
     Text framecounter = Text("FPS : " + to_string(chrono.FramePerSecond()), "../res/monogram.ttf", 20);
 
@@ -44,14 +44,13 @@ class Engine3D : public Engine<Engine3D> {
         eventDispatcher.Unbind(SDL_KEYUP, &cam);
         eventDispatcher.Unbind(SDL_MOUSEMOTION, &cam);
         eventDispatcher.Unbind(SDL_KEYDOWN, &renderer);
-        delete mesh;
     }
 
     void Start() {
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_DEPTH_TEST);
-        // glEnable(GL_LIGHTING);
-        // glEnable(GL_LIGHT0);
+        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT0);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -66,33 +65,35 @@ class Engine3D : public Engine<Engine3D> {
         // Vector3D p = Vector3D(0.0,0.0,0.0);
         // Vector3D m = Vector3D(0.00729,0.00651,0.0);
 
-        Vector3D c1 = Vector3D(-1.0, 1.0, -1.0);
-        Vector3D c2 = Vector3D(1.0, 1.0, -1.0);
-        Vector3D c3 = Vector3D(1.0, 1.0, 1.0);
-        Vector3D c4 = Vector3D(-1.0, 1.0, 1.0);
-        Vector3D c5 = Vector3D(-1.0, -1.0, -1.0);
-        Vector3D c6 = Vector3D(1.0, -1.0, -1.0);
-        Vector3D c7 = Vector3D(1.0, -1.0, 1.0);
-        Vector3D c8 = Vector3D(-1.0, -1.0, 1.0);
+        // Vector3D c1 = Vector3D(-1.0, 1.0, -1.0);
+        // Vector3D c2 = Vector3D(1.0, 1.0, -1.0);
+        // Vector3D c3 = Vector3D(1.0, 1.0, 1.0);
+        // Vector3D c4 = Vector3D(-1.0, 1.0, 1.0);
+        // Vector3D c5 = Vector3D(-1.0, -1.0, -1.0);
+        // Vector3D c6 = Vector3D(1.0, -1.0, -1.0);
+        // Vector3D c7 = Vector3D(1.0, -1.0, 1.0);
+        // Vector3D c8 = Vector3D(-1.0, -1.0, 1.0);
 
-        Vector3D nt = Vector3D(0.0, 1.0, 0.0);
-        Vector3D nb = Vector3D(0.0, -1.0, 0.0);
-        Vector3D nf = Vector3D(0.0, 0.0, 1.0);
-        Vector3D nbk = Vector3D(0.0, 0.0, -1.0);
-        Vector3D nr = Vector3D(1.0, 0.0, 0.0);
-        Vector3D nl = Vector3D(-1.0, 0.0, 0.0);
+        // Vector3D nt = Vector3D(0.0, 1.0, 0.0);
+        // Vector3D nb = Vector3D(0.0, -1.0, 0.0);
+        // Vector3D nf = Vector3D(0.0, 0.0, 1.0);
+        // Vector3D nbk = Vector3D(0.0, 0.0, -1.0);
+        // Vector3D nr = Vector3D(1.0, 0.0, 0.0);
+        // Vector3D nl = Vector3D(-1.0, 0.0, 0.0);
 
-        Matrix44D rotationX;
-        Matrix44D rotationY;
-        Matrix44D rotationZ;
+        // Matrix44D rotationX;
+        // Matrix44D rotationY;
+        // Matrix44D rotationZ;
 
-        rotationX.LoadRotationX(0.000488);
-        rotationY.LoadRotationY(0.0000688);
-        rotationZ.LoadRotationZ(0.0000988);
+        // rotationX.LoadRotationX(0.000488);
+        // rotationY.LoadRotationY(0.0000688);
+        // rotationZ.LoadRotationZ(0.0000988);
 
-        Scene scene = InitScene();
+        Scene scene = GEngineExample::TestScene();
         RenderHandler::GetInstance().SetCurrentScene(&scene);
+
         scene.Init();
+        scene.Start();
 
         /*
          size_t vertexCount = 24;
@@ -167,11 +168,10 @@ class Engine3D : public Engine<Engine3D> {
 
             renderer.CenterCursor();
 
-            mesh->Transform(rotationX);
-            mesh->Transform(rotationY);
-            mesh->Transform(rotationZ);
-
-            scene.LateUpdate(chrono.DeltaTime());
+            // TODO changer
+            double deltaTime = chrono.DeltaTime();
+            scene.Update(deltaTime);
+            scene.LateUpdate(deltaTime);
             RenderHandler::GetInstance().Render();
             // mesh.Draw();
             /*
@@ -286,16 +286,9 @@ class Engine3D : public Engine<Engine3D> {
 
             renderer.RenderUpdate();
         }
-    }
 
-    Scene InitScene() {
-        GameObject go;
-        go.addChild(GameObject());
-        mesh = new TexturedMesh(go.getTransform(), "../res/monkey.obj", "../res/crate.png");
-        go.addComponent(mesh);
-        Scene scene;
-        scene.addGameObject(go);
-        return scene;
+        scene.Quit();
+        scene.Destroy();
     }
 
     // glDisable(GL_TEXTURE_2D);

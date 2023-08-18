@@ -39,6 +39,22 @@ class RenderHandler : public Singleton<RenderHandler> {
         }
     }
 
+    void Unsubscribe(RenderComponent* renderComponent) {
+        if (currentScene != nullptr) {
+            int i = 0;
+            int indexToRemove = -1;
+            for (RenderComponent* component : renderComponents[currentScene]) {
+                if (component == renderComponent) {
+                    indexToRemove = i;
+                }
+                i++;
+            }
+            if (indexToRemove != -1) {
+                renderComponents[currentScene].erase(renderComponents[currentScene].begin() + indexToRemove);
+            }
+        }
+    }
+
     void ClearCurrentScene() {
         if (currentScene == nullptr) {
             return;

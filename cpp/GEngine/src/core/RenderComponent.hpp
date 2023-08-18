@@ -7,8 +7,6 @@
 namespace GEngine {
 class RenderComponent : public Component {
    public:
-    RenderComponent(Transform* gameObjectTransform) : Component(gameObjectTransform) {}
-
     virtual void Render() = 0;
 };
 }  // namespace GEngine

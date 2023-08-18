@@ -4,12 +4,13 @@
     {
       "name": "Windows",
       "type": "cppdbg",
-      "request": "launch",S
+      "request": "launch",
       "program": "${workspaceFolder}/build/Programme.exe",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/build/",
       "environment": [],
+      "externalConsole": true,
       "MIMode": "gdb",
       "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
       "setupCommands": [

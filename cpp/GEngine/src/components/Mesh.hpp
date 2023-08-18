@@ -11,8 +11,9 @@ class Mesh : public RenderComponent {
     string meshPath;
     double* verticies;
     size_t vertexCount;
+    size_t faceCount;
 
-    Mesh(Transform* gameObjectTransform, string meshPath) : RenderComponent(gameObjectTransform) {
+    Mesh(string meshPath) {
         this->meshPath = meshPath;
     }
 
@@ -24,6 +25,12 @@ class Mesh : public RenderComponent {
     void Init() {
         RenderHandler::GetInstance().Subscribe(this);
         Load();
+        this->getGameObjectTransform()->AddObserver(this);
+    }
+
+    void Destroy() {
+        RenderHandler::GetInstance().Unsubscribe(this);
+        this->getGameObjectTransform()->RemoveObserver(this);
     }
 
     virtual void Load() = 0;

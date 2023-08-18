@@ -10,6 +10,9 @@ class Component : public LifeCycleObject {
     Transform* gameObjectTransform;
 
    public:
+    Component() {
+    }
+
     Component(Transform* gameObjectTransform) {
         this->gameObjectTransform = gameObjectTransform;
     }
@@ -20,6 +23,14 @@ class Component : public LifeCycleObject {
     virtual void LateUpdate(double deltaTime){};
     virtual void Quit(){};
     virtual void Destroy(){};
+
+    Transform* getGameObjectTransform() {
+        return this->gameObjectTransform;
+    }
+
+    void setGameObjectTransform(Transform* gameObjectTransform) {
+        this->gameObjectTransform = gameObjectTransform;
+    }
 };
 }  // namespace GEngine
 #endif

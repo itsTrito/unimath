@@ -10,9 +10,9 @@
 #include <string>
 #include <vector>
 
-#include "../Matrix44D.hpp"
-#include "../Vector3D.hpp"
 #include "../core/Transform.hpp"
+#include "../math/Matrix44D.hpp"
+#include "../math/Vector3D.hpp"
 #include "Mesh.hpp"
 
 using namespace std;
@@ -28,10 +28,13 @@ class TexturedMesh : public Mesh {
     const static unsigned char NORMAL_LENGHT = 3;
     const static unsigned char TEXTURE_LENGHT = 2;
 
+    Transform lastTransform;
+
    public:
-    TexturedMesh(Transform *gameObjectTransform, string meshPath, string texturePath) : Mesh(gameObjectTransform, meshPath) {
+    TexturedMesh(string meshPath, string texturePath) : Mesh(meshPath) {
         vertexCount = textureId = 0;
         this->texturePath = texturePath;
+        this->lastTransform = GEngine::Transform();
     }
 
     ~TexturedMesh() {
@@ -158,6 +161,7 @@ class TexturedMesh : public Mesh {
         }
 
         this->vertexCount = finalVertecies.size() / VERTEX_LENGHT;
+        this->faceCount = this->vertexCount / VERTEX_LENGHT;
         this->verticies = new double[vertexCount * VERTEX_LENGHT];
         this->normals = new double[vertexCount * NORMAL_LENGHT];
         this->textureCoords = new double[vertexCount * TEXTURE_LENGHT];
@@ -193,11 +197,44 @@ class TexturedMesh : public Mesh {
         glNormalPointer(GL_DOUBLE, 0, normals);
         glTexCoordPointer(2, GL_DOUBLE, 0, textureCoords);
 
-        glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, vertexCount);
 
         glDisableClientState(GL_VERTEX_ARRAY);
         glDisableClientState(GL_NORMAL_ARRAY);
         glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    }
+
+    void Notification() {
+        Vector3D movement = this->getGameObjectTransform()->getPosition() - this->lastTransform.getPosition();
+        if (movement.GetNorm() > 0) {
+            this->Translate(movement);
+        }
+
+        Vector3D rotationChange = this->getGameObjectTransform()->getRotation() - this->lastTransform.getRotation();
+        if (rotationChange.GetNorm() > 0) {
+            Matrix44D rotation = Matrix44D();
+            if (abs(rotationChange.x) > 0) {
+                rotation.LoadRotationX(rotationChange.x);
+                this->Transform(rotation, this->getGameObjectTransform()->getPosition());
+            }
+            if (abs(rotationChange.y) > 0) {
+                rotation.LoadRotationY(rotationChange.y);
+                this->Transform(rotation, this->getGameObjectTransform()->getPosition());
+            }
+            if (abs(rotationChange.z) > 0) {
+                rotation.LoadRotationZ(rotationChange.z);
+                this->Transform(rotation, this->getGameObjectTransform()->getPosition());
+            }
+        }
+
+        Vector3D scaleChange = this->getGameObjectTransform()->getScale() - this->lastTransform.getScale();
+        if (scaleChange.GetNorm() > 0) {
+            Matrix44D scale = Matrix44D();
+            scale.loadScale(scaleChange.x, scaleChange.y, scaleChange.z);
+            this->Transform(scale, this->getGameObjectTransform()->getPosition());
+        }
+
+        this->lastTransform = *this->getGameObjectTransform();
     }
 
     string *Explode(string textToSplit, char delimiter = 0) {

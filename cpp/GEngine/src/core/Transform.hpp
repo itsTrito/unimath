@@ -22,8 +22,6 @@ class Transform {
         this->rotation = rotation;
         this->scale = scale;
     }
-    ~Transform() {
-    }
 };
 
 }  // namespace GEngine

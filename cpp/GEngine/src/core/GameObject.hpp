@@ -97,6 +97,10 @@ class GameObject : public LifeCycleObject {
     void addComponent(Component *component) {
         this->components.push_back(component);
     }
+
+    Transform *getTransform() {
+        return &this->transform;
+    }
 };
 }  // namespace GEngine
 

@@ -15,6 +15,7 @@
 #include "components/TexturedMesh.hpp"
 #include "core/GameObject.hpp"
 #include "core/Scene.hpp"
+#include "handlers/RenderHandler.hpp"
 
 using namespace std;
 
@@ -25,8 +26,7 @@ class Engine3D : public Engine<Engine3D> {
     FirstPersonCamera cam;  // = FirstPersonCamera(Vector3D(0.0,0.0,-1.0), Vector3D(0.0,0.0,1.0), Vector3D(0.0,1.0,0.0));
     // Observable keyDown, keyUp;
     EventDispatcher eventDispatcher;
-    TTF_Font* ttfFont;
-    TexturedMesh mesh = TexturedMesh("../res/monkey.obj", "../res/crate.png");
+    TexturedMesh* mesh;
     Chrono chrono;
     Text framecounter = Text("FPS : " + to_string(chrono.FramePerSecond()), "../res/monogram.ttf", 20);
 
@@ -44,6 +44,7 @@ class Engine3D : public Engine<Engine3D> {
         eventDispatcher.Unbind(SDL_KEYUP, &cam);
         eventDispatcher.Unbind(SDL_MOUSEMOTION, &cam);
         eventDispatcher.Unbind(SDL_KEYDOWN, &renderer);
+        delete mesh;
     }
 
     void Start() {
@@ -89,7 +90,8 @@ class Engine3D : public Engine<Engine3D> {
         rotationY.LoadRotationY(0.0000688);
         rotationZ.LoadRotationZ(0.0000988);
 
-        Scene scene = initScene();
+        Scene scene = InitScene();
+        RenderHandler::GetInstance().SetCurrentScene(&scene);
         scene.Init();
 
         /*
@@ -165,11 +167,12 @@ class Engine3D : public Engine<Engine3D> {
 
             renderer.CenterCursor();
 
-            mesh.Transform(rotationX);
-            mesh.Transform(rotationY);
-            mesh.Transform(rotationZ);
+            mesh->Transform(rotationX);
+            mesh->Transform(rotationY);
+            mesh->Transform(rotationZ);
 
             scene.LateUpdate(chrono.DeltaTime());
+            RenderHandler::GetInstance().Render();
             // mesh.Draw();
             /*
             c1 = rotationX * c1;
@@ -285,10 +288,11 @@ class Engine3D : public Engine<Engine3D> {
         }
     }
 
-    Scene initScene() {
+    Scene InitScene() {
         GameObject go;
         go.addChild(GameObject());
-        go.addComponent(&mesh);
+        mesh = new TexturedMesh(go.getTransform(), "../res/monkey.obj", "../res/crate.png");
+        go.addComponent(mesh);
         Scene scene;
         scene.addGameObject(go);
         return scene;

@@ -1,31 +1,32 @@
 #ifndef MESH_HPP
 #define MESH_HPP
 
-#include "../core/Component.hpp"
+#include "../core/RenderComponent.hpp"
+#include "../core/Transform.hpp"
+#include "../handlers/RenderHandler.hpp"
 
 namespace GEngine {
-class Mesh : public Component {
+class Mesh : public RenderComponent {
    protected:
     string meshPath;
     double* verticies;
     size_t vertexCount;
 
-    Mesh(string meshPath) {
+    Mesh(Transform* gameObjectTransform, string meshPath) : RenderComponent(gameObjectTransform) {
         this->meshPath = meshPath;
     }
 
+    ~Mesh() {
+        delete[] verticies;
+    }
+
    public:
-    void Init() override {
+    void Init() {
+        RenderHandler::GetInstance().Subscribe(this);
         Load();
     }
 
-    void LateUpdate(double deltaTime) override {
-        Draw();
-    }
-
     virtual void Load() = 0;
-
-    virtual void Draw() = 0;
 };
 }  // namespace GEngine
 

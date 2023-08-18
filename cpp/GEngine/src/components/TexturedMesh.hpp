@@ -12,6 +12,7 @@
 
 #include "../Matrix44D.hpp"
 #include "../Vector3D.hpp"
+#include "../core/Transform.hpp"
 #include "Mesh.hpp"
 
 using namespace std;
@@ -23,18 +24,17 @@ class TexturedMesh : public Mesh {
     double *textureCoords;
     unsigned int textureId;
 
-    const unsigned char VERTEX_LENGHT = 3;
-    const unsigned char NORMAL_LENGHT = 3;
-    const unsigned char TEXTURE_LENGHT = 2;
+    const static unsigned char VERTEX_LENGHT = 3;
+    const static unsigned char NORMAL_LENGHT = 3;
+    const static unsigned char TEXTURE_LENGHT = 2;
 
    public:
-    TexturedMesh(string meshPath, string texturePath) : Mesh(meshPath) {
+    TexturedMesh(Transform *gameObjectTransform, string meshPath, string texturePath) : Mesh(gameObjectTransform, meshPath) {
         vertexCount = textureId = 0;
         this->texturePath = texturePath;
     }
 
     ~TexturedMesh() {
-        delete[] verticies;
         delete[] normals;
         delete[] textureCoords;
     }
@@ -173,7 +173,7 @@ class TexturedMesh : public Mesh {
         }
     }
 
-    void Draw() {
+    void Render() override {
         if (textureId == 0) {
             glGenTextures(1, &textureId);
             glBindTexture(GL_TEXTURE_2D, textureId);

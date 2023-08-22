@@ -5,6 +5,7 @@
 #include "../core/GameObject.hpp"
 #include "../core/Scene.hpp"
 #include "../core/Transform.hpp"
+#include "../presets/CubePreset.hpp"
 #include "Transformer.hpp"
 
 using namespace GEngine;
@@ -14,7 +15,9 @@ class TestScene : public Scene {
    public:
     TestScene() {
         GameObject go = GameObject(new Transform(), {GameObject()}, {new TexturedMesh("../res/monkey.obj", "../res/crate.png"), new Transformer()});
-        this->addGameObject(go);
+        // this->addGameObject(go);
+        CubePreset cube = CubePreset();
+        this->addGameObject(cube);
     }
 };
 }  // namespace GEngineExample

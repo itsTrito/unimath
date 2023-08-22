@@ -99,7 +99,7 @@ class Matrix44D {
      * \param v axe sur laquelle faire la rotation
      * \param angle angle a rotater
      */
-    void loadRotate(Vector3D v, double angle) {
+    void LoadRotate(Vector3D v, double angle) {
         v.Normalize();
         double c = cos(angle);
         double s = sin(angle);
@@ -142,7 +142,7 @@ class Matrix44D {
      * \param y Facteur de l'axe des y
      * \param z Facteur de l'axe des z
      */
-    void loadScale(const double& x, const double& y, const double& z) {
+    void LoadScale(const double& x, const double& y, const double& z) {
         m11 = x;
         m22 = y;
         m33 = z;
@@ -163,14 +163,6 @@ class Matrix44D {
         t.z = (m31 * v.x) + (m32 * v.y) + (m33 * v.z);
         return t;
     }
-
-    /*Vector3D operator*= (const Vector3D& v){
-        Vector3D t;
-        t.x = (m11 * v.x) + (m12 * v.y) + (m13 * v.z);
-        t.y = (m21 * v.x) + (m22 * v.y) + (m23 * v.z);
-        t.z = (m31 * v.x) + (m32 * v.y) + (m33 * v.z);
-        return t;
-    }*/
 };
 }  // namespace GEngine
 

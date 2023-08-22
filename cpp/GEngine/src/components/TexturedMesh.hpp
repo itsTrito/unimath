@@ -230,7 +230,7 @@ class TexturedMesh : public Mesh {
         Vector3D scaleChange = this->getGameObjectTransform()->getScale() - this->lastTransform.getScale();
         if (scaleChange.GetNorm() > 0) {
             Matrix44D scale = Matrix44D();
-            scale.loadScale(scaleChange.x, scaleChange.y, scaleChange.z);
+            scale.LoadScale(scaleChange.x, scaleChange.y, scaleChange.z);
             this->Transform(scale, this->getGameObjectTransform()->getPosition());
         }
 

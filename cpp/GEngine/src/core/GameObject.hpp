@@ -28,7 +28,7 @@ class GameObject : public LifeCycleObject {
         }
         this->components = std::vector<Component *>();
         for (int i = 0; i < components.size(); i++) {
-            components[i]->setGameObjectTransform(transform);
+            components[i]->SetGameObjectTransform(transform);
             this->components.push_back(components[i]);
         }
     }
@@ -45,6 +45,7 @@ class GameObject : public LifeCycleObject {
         for (int i = 0; i < children.size(); i++) {
             children[i].Init();
         }
+        this->transform->Notify();
     }
 
     void Start() {

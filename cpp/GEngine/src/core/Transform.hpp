@@ -12,13 +12,7 @@ class Transform : public Observable {
     Vector3D scale;
 
    public:
-    Transform() {
-        this->position = Vector3D();
-        this->rotation = Vector3D();
-        this->scale = Vector3D();
-    }
-
-    Transform(Vector3D position, Vector3D rotation, Vector3D scale) {
+    Transform(Vector3D position = Vector3D(), Vector3D rotation = Vector3D(), Vector3D scale = Vector3D::Identity()) {
         this->position = position;
         this->rotation = rotation;
         this->scale = scale;

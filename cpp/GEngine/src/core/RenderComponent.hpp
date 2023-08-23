@@ -2,7 +2,6 @@
 #define RENDER_COMPONENT_HPP
 
 #include "Component.hpp"
-#include "Transform.hpp"
 
 namespace GEngine {
 class RenderComponent : public Component {

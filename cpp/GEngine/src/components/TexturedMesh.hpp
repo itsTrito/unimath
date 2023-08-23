@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "../core/Transform.hpp"
+#include "../math/MathUtils.hpp"
 #include "../math/Matrix44D.hpp"
 #include "../math/Vector3D.hpp"
 #include "Mesh.hpp"
@@ -23,6 +24,7 @@ class TexturedMesh : public Mesh {
     double *normals;
     double *textureCoords;
     unsigned int textureId;
+    unsigned int tmpCount = 0;
 
     const static unsigned char VERTEX_LENGHT = 3;
     const static unsigned char NORMAL_LENGHT = 3;
@@ -57,40 +59,44 @@ class TexturedMesh : public Mesh {
 
     // Global
     void Transform(const Matrix44D &m) {
-        for (int i = 0; i < vertexCount * VERTEX_LENGHT; i = i + 3) {
-            int iy = i + 1;
-            int iz = i + 2;
-            verticies[i] = (m.m11 * verticies[i]) + (m.m12 * verticies[iy]) + (m.m13 * verticies[iz]);
-            verticies[iy] = (m.m21 * verticies[i]) + (m.m22 * verticies[iy]) + (m.m23 * verticies[iz]);
-            verticies[iz] = (m.m31 * verticies[i]) + (m.m32 * verticies[iy]) + (m.m33 * verticies[iz]);
+        for (int i = 0; i < (faceCount * 3) * 3; i = i + 3) {
+            double cX = verticies[i], cY = verticies[i + 1], cZ = verticies[i + 2];
+            verticies[i] = (m.m11 * cX) + (m.m12 * cY) + (m.m13 * cZ);
+            verticies[i + 1] = (m.m21 * cX) + (m.m22 * cY) + (m.m23 * cZ);
+            verticies[i + 2] = (m.m31 * cX) + (m.m32 * cY) + (m.m33 * cZ);
 
-            normals[i] = (m.m11 * normals[i]) + (m.m12 * normals[iy]) + (m.m13 * normals[iz]);
-            normals[iy] = (m.m21 * normals[i]) + (m.m22 * normals[iy]) + (m.m23 * normals[iz]);
-            normals[iz] = (m.m31 * normals[i]) + (m.m32 * normals[iy]) + (m.m33 * normals[iz]);
+            cX = normals[i];
+            cY = normals[i + 1];
+            cZ = normals[i + 2];
+            normals[i] = (m.m11 * cX) + (m.m12 * cY) + (m.m13 * cZ);
+            normals[i + 1] = (m.m21 * cX) + (m.m22 * cY) + (m.m23 * cZ);
+            normals[i + 2] = (m.m31 * cX) + (m.m32 * cY) + (m.m33 * cZ);
         }
     }
 
     // Local
     void Transform(const Matrix44D &m, const Vector3D &v) {
-        for (int i = 0; i < vertexCount * VERTEX_LENGHT; i = i + 3) {
-            int iy = i + 1;
-            int iz = i + 2;
-
+        for (int i = 0; i < (faceCount * 3) * 3; i = i + 3) {
             verticies[i] -= v.x;
-            verticies[iy] -= v.y;
-            verticies[iz] -= v.z;
+            verticies[i + 1] -= v.y;
+            verticies[i + 2] -= v.z;
 
-            verticies[i] = (m.m11 * verticies[i]) + (m.m12 * verticies[iy]) + (m.m13 * verticies[iz]);
-            verticies[iy] = (m.m21 * verticies[i]) + (m.m22 * verticies[iy]) + (m.m23 * verticies[iz]);
-            verticies[iz] = (m.m31 * verticies[i]) + (m.m32 * verticies[iy]) + (m.m33 * verticies[iz]);
-
-            normals[i] = (m.m11 * normals[i]) + (m.m12 * normals[iy]) + (m.m13 * normals[iz]);
-            normals[iy] = (m.m21 * normals[i]) + (m.m22 * normals[iy]) + (m.m23 * normals[iz]);
-            normals[iz] = (m.m31 * normals[i]) + (m.m32 * normals[iy]) + (m.m33 * normals[iz]);
+            double cX = verticies[i], cY = verticies[i + 1], cZ = verticies[i + 2];
+            verticies[i] = (m.m11 * cX) + (m.m12 * cY) + (m.m13 * cZ);
+            verticies[i + 1] = (m.m21 * cX) + (m.m22 * cY) + (m.m23 * cZ);
+            verticies[i + 2] = (m.m31 * cX) + (m.m32 * cY) + (m.m33 * cZ);
+            cX = verticies[i], cY = verticies[i + 1], cZ = verticies[i + 2];
 
             verticies[i] += v.x;
-            verticies[iy] += v.y;
-            verticies[iz] += v.z;
+            verticies[i + 1] += v.y;
+            verticies[i + 2] += v.z;
+
+            cX = normals[i];
+            cY = normals[i + 1];
+            cZ = normals[i + 2];
+            normals[i] = (m.m11 * cX) + (m.m12 * cY) + (m.m13 * cZ);
+            normals[i + 1] = (m.m21 * cX) + (m.m22 * cY) + (m.m23 * cZ);
+            normals[i + 2] = (m.m31 * cX) + (m.m32 * cY) + (m.m33 * cZ);
         }
     }
 
@@ -197,7 +203,7 @@ class TexturedMesh : public Mesh {
         glNormalPointer(GL_DOUBLE, 0, normals);
         glTexCoordPointer(2, GL_DOUBLE, 0, textureCoords);
 
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, vertexCount);
+        glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 
         glDisableClientState(GL_VERTEX_ARRAY);
         glDisableClientState(GL_NORMAL_ARRAY);
@@ -205,36 +211,37 @@ class TexturedMesh : public Mesh {
     }
 
     void Notification() {
-        Vector3D movement = this->getGameObjectTransform()->getPosition() - this->lastTransform.getPosition();
+        Vector3D movement = this->GetGameObjectTransform()->getPosition() - this->lastTransform.getPosition();
         if (movement.GetNorm() > 0) {
             this->Translate(movement);
         }
 
-        Vector3D rotationChange = this->getGameObjectTransform()->getRotation() - this->lastTransform.getRotation();
+        Vector3D rotationChange = this->GetGameObjectTransform()->getRotation() - this->lastTransform.getRotation();
         if (rotationChange.GetNorm() > 0) {
             Matrix44D rotation = Matrix44D();
             if (abs(rotationChange.x) > 0) {
-                rotation.LoadRotationX(rotationChange.x);
-                this->Transform(rotation, this->getGameObjectTransform()->getPosition());
+                double test = MathUtils::degToRad(rotationChange.x);
+                rotation.LoadRotationX(test);
+                this->Transform(rotation, this->GetGameObjectTransform()->getPosition());
             }
             if (abs(rotationChange.y) > 0) {
                 rotation.LoadRotationY(rotationChange.y);
-                this->Transform(rotation, this->getGameObjectTransform()->getPosition());
+                this->Transform(rotation, this->GetGameObjectTransform()->getPosition());
             }
             if (abs(rotationChange.z) > 0) {
                 rotation.LoadRotationZ(rotationChange.z);
-                this->Transform(rotation, this->getGameObjectTransform()->getPosition());
+                this->Transform(rotation, this->GetGameObjectTransform()->getPosition());
             }
         }
 
-        Vector3D scaleChange = this->getGameObjectTransform()->getScale() - this->lastTransform.getScale();
+        Vector3D scaleChange = this->GetGameObjectTransform()->getScale() - this->lastTransform.getScale();
         if (scaleChange.GetNorm() > 0) {
             Matrix44D scale = Matrix44D();
             scale.LoadScale(scaleChange.x, scaleChange.y, scaleChange.z);
-            this->Transform(scale, this->getGameObjectTransform()->getPosition());
+            this->Transform(scale, this->GetGameObjectTransform()->getPosition());
         }
 
-        this->lastTransform = *this->getGameObjectTransform();
+        this->lastTransform = *this->GetGameObjectTransform();
     }
 
     string *Explode(string textToSplit, char delimiter = 0) {

@@ -15,7 +15,7 @@ class CameraGodCam : public Camera3D {
     double sensitivity = 0.001;
     double angleX = 0.0;
     double angleY = 0.0;
-    double movementSpeed = 0.2;
+    double movementSpeed = 1;
     Matrix44D rotationMatrix;
 
    public:

@@ -24,11 +24,11 @@ class Component : public LifeCycleObject {
     virtual void Quit(){};
     virtual void Destroy(){};
 
-    Transform* getGameObjectTransform() {
+    Transform* GetGameObjectTransform() {
         return this->gameObjectTransform;
     }
 
-    void setGameObjectTransform(Transform* gameObjectTransform) {
+    void SetGameObjectTransform(Transform* gameObjectTransform) {
         this->gameObjectTransform = gameObjectTransform;
     }
 };

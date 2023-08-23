@@ -13,6 +13,7 @@
 #include "components/TexturedMesh.hpp"
 #include "core/GameObject.hpp"
 #include "core/Scene.hpp"
+#include "handlers/PhysicsHandler.hpp"
 #include "handlers/RenderHandler.hpp"
 #include "math/Matrix44D.hpp"
 #include "math/Vector3D.hpp"
@@ -63,6 +64,7 @@ class Engine3D : public Engine<Engine3D> {
 
         Scene scene = GEngineExample::TestScene();
         RenderHandler::GetInstance().SetCurrentScene(&scene);
+        PhysicsHandler::GetInstance().SetCurrentScene(&scene);
 
         scene.Init();
         scene.Start();
@@ -83,7 +85,8 @@ class Engine3D : public Engine<Engine3D> {
             }
 
             // TODO changer
-            double deltaTime = chrono.DeltaTime();
+            double deltaTime = chrono.EllapsedTime();
+            chrono.Reset();
             cam.Update(deltaTime);
 
             // 3d
@@ -101,6 +104,7 @@ class Engine3D : public Engine<Engine3D> {
             renderer.CenterCursor();
 
             scene.Update(deltaTime);
+            PhysicsHandler::GetInstance().Evaluate(deltaTime);
             scene.LateUpdate(deltaTime);
             RenderHandler::GetInstance().Render();
 
@@ -115,9 +119,9 @@ class Engine3D : public Engine<Engine3D> {
             glMatrixMode(GL_MODELVIEW);
             glLoadIdentity();
 
+            double frameCount = chrono.FramePerSecond(0.5f);
             framecounter.Draw();
-            chrono.FramePerSecond();
-            framecounter.SetText("DeltaTime: " + to_string(deltaTime));
+            framecounter.SetText("FPS: " + to_string(frameCount));
 
             renderer.RenderUpdate();
         }

@@ -25,12 +25,12 @@ class Mesh : public RenderComponent {
     void Init() {
         RenderHandler::GetInstance().Subscribe(this);
         Load();
-        this->getGameObjectTransform()->AddObserver(this);
+        this->GetGameObjectTransform()->AddObserver(this);
     }
 
     void Destroy() {
         RenderHandler::GetInstance().Unsubscribe(this);
-        this->getGameObjectTransform()->RemoveObserver(this);
+        this->GetGameObjectTransform()->RemoveObserver(this);
     }
 
     virtual void Load() = 0;

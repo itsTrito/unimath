@@ -14,10 +14,9 @@ class Transformer : public Component {
     Transformer() {}
 
     void Update(double deltaTime) {
-        // getGameObjectTransform()->Translate(0.001, 0.00001, 0.00001);
         double angle = 0.05;
-        GetGameObjectTransform()->Rotate(angle, angle, angle);
-        GetGameObjectTransform()->Scale(1.001, 1.001, 1.001);
+        GetGameObjectTransform()->Translate(0.001, 0, 0);
+        GetGameObjectTransform()->Rotate(angle, 0, angle);
     }
 };
 }  // namespace GEngineExample

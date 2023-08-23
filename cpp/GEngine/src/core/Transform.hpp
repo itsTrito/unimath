@@ -50,6 +50,11 @@ class Transform : public Observable {
         this->Notify();
     }
 
+    void SetScale(double x, double y, double z) {
+        this->scale = Vector3D(x, y, z);
+        this->Notify();
+    }
+
     string toString() {
         return position.toString() + "\n" + rotation.toString() + "\n" + scale.toString() + "\n";
     }

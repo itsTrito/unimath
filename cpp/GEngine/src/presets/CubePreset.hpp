@@ -1,6 +1,7 @@
 #ifndef CUBE_PRESET_HPP
 #define CUBE_PRESET_HPP
 
+#include "../components/ColoredMesh.hpp"
 #include "../components/TexturedMesh.hpp"
 #include "../core/GameObject.hpp"
 #include "../core/Transform.hpp"
@@ -9,7 +10,7 @@
 namespace GEngine {
 class CubePreset : public GameObject {
    public:
-    CubePreset(Transform* transform = new Transform()) : GameObject(transform, {}, {new TexturedMesh("../res/box.obj", "../res/lindenCoeur.png")}) {}
+    CubePreset(Transform* transform = new Transform()) : GameObject(transform, {}, {new ColoredMesh("../res/box.obj", Color(111, 78, 55, (Uint8)255))}) {}
 };
 }  // namespace GEngine
 

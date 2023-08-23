@@ -1,38 +1,19 @@
-#ifndef TEXTURED_MESH_HPP
-#define TEXTURED_MESH_HPP
+#ifndef COLORED_MESH_HPP
+#define COLORED_MESH_HPP
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_main.h>
-#include <SDL2/SDL_ttf.h>
-
-#include <fstream>
-#include <string>
-#include <vector>
-
-#include "../math/Matrix44D.hpp"
-#include "../math/Vector3D.hpp"
-#include "../utils/StringUtils.hpp"
+#include "../resources/Color.hpp"
 #include "Mesh.hpp"
 
-using namespace std;
 namespace GEngine {
-class TexturedMesh : public Mesh {
+class ColoredMesh : public Mesh {
    private:
-    string texturePath;
-    double *textureCoords;
-    unsigned int textureId;
-
-    const static unsigned char TEXTURE_LENGHT = 2;
+    Color color;
+    bool withLighting;
 
    public:
-    TexturedMesh(string meshPath, string texturePath) : Mesh(meshPath) {
-        vertexCount = textureId = 0;
-        this->texturePath = texturePath;
-    }
-
-    ~TexturedMesh() {
-        delete[] textureCoords;
+    ColoredMesh(string meshPath, Color color, bool withLighting = false) : Mesh(meshPath) {
+        this->color = color;
+        this->withLighting = withLighting;
     }
 
     void Load() {
@@ -41,11 +22,9 @@ class TexturedMesh : public Mesh {
 
         vector<double> tmpVertecies;
         vector<double> tmpNormals;
-        vector<double> tmpTextCoords;
 
         vector<double> finalVertecies;
         vector<double> finalNormal;
-        vector<double> finalText;
 
         if (reader.is_open()) {
             while (!reader.eof()) {
@@ -53,12 +32,7 @@ class TexturedMesh : public Mesh {
                 switch (line[0]) {
                     case 'v':
                         if (line.length() > 1) {
-                            if (line[1] == 't') {
-                                for (int i = 0; i < TEXTURE_LENGHT; i++) {
-                                    reader >> line;
-                                    tmpTextCoords.push_back(stod(line));
-                                }
-                            } else {
+                            if (line[1] != 't') {
                                 for (int i = 0; i < NORMAL_LENGHT; i++) {
                                     reader >> line;
                                     tmpNormals.push_back(stod(line));
@@ -82,11 +56,6 @@ class TexturedMesh : public Mesh {
                                 finalVertecies.push_back(tmpVertecies[i]);
                             }
 
-                            index = stod(t[1]) - 1;
-                            for (int i = index * TEXTURE_LENGHT; i < (index * TEXTURE_LENGHT) + TEXTURE_LENGHT; i++) {
-                                finalText.push_back(tmpTextCoords[i]);
-                            }
-
                             index = stod(t[2]) - 1;
                             for (int i = index * NORMAL_LENGHT; i < (index * NORMAL_LENGHT) + NORMAL_LENGHT; i++) {
                                 finalNormal.push_back(tmpNormals[i]);
@@ -105,7 +74,6 @@ class TexturedMesh : public Mesh {
         this->faceCount = this->vertexCount / VERTEX_LENGHT;
         this->verticies = new double[vertexCount * VERTEX_LENGHT];
         this->normals = new double[vertexCount * NORMAL_LENGHT];
-        this->textureCoords = new double[vertexCount * TEXTURE_LENGHT];
 
         for (int i = 0; i < vertexCount * VERTEX_LENGHT; i++) {
             verticies[i] = finalVertecies[i];
@@ -113,36 +81,22 @@ class TexturedMesh : public Mesh {
         for (int i = 0; i < vertexCount * NORMAL_LENGHT; i++) {
             normals[i] = finalNormal[i];
         }
-        for (int i = 0; i < vertexCount * TEXTURE_LENGHT; i++) {
-            textureCoords[i] = finalText[i];
-        }
     }
 
     void Render() {
-        if (textureId == 0) {
-            glGenTextures(1, &textureId);
-            glBindTexture(GL_TEXTURE_2D, textureId);
-            SDL_Surface *sdlSurface = IMG_Load(texturePath.c_str());
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sdlSurface->w, sdlSurface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, sdlSurface->pixels);
-            SDL_FreeSurface(sdlSurface);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        }
-
+        glDisable(GL_TEXTURE_2D);
+        // Activer transparence
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glColor4d(color.getR(), color.getG(), color.getB(), color.getA());
         glEnableClientState(GL_VERTEX_ARRAY);
-        glEnableClientState(GL_NORMAL_ARRAY);
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-        glBindTexture(GL_TEXTURE_2D, textureId);
         glVertexPointer(3, GL_DOUBLE, 0, verticies);
-        glNormalPointer(GL_DOUBLE, 0, normals);
-        glTexCoordPointer(2, GL_DOUBLE, 0, textureCoords);
-
+        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glDrawArrays(GL_TRIANGLES, 0, vertexCount);
-
         glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_NORMAL_ARRAY);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        glEnable(GL_TEXTURE_2D);
+        // glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glColor4d(1.0, 1.0, 1.0, 1.0);
     }
 };
 }  // namespace GEngine

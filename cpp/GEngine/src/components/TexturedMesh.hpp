@@ -118,7 +118,7 @@ class TexturedMesh : public Mesh {
         }
     }
 
-    void Render() {
+    void Render(RenderConfig config) {
         if (textureId == 0) {
             glGenTextures(1, &textureId);
             glBindTexture(GL_TEXTURE_2D, textureId);
@@ -138,11 +138,19 @@ class TexturedMesh : public Mesh {
         glNormalPointer(GL_DOUBLE, 0, normals);
         glTexCoordPointer(2, GL_DOUBLE, 0, textureCoords);
 
+        if (config.drawLines) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
+
         glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 
         glDisableClientState(GL_VERTEX_ARRAY);
         glDisableClientState(GL_NORMAL_ARRAY);
         glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+        if (config.drawLines) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
     }
 };
 }  // namespace GEngine

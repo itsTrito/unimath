@@ -50,18 +50,26 @@ class Text {
         SDL_FreeSurface(sdlSurface);
     }
 
-    void Draw() {
+    void Draw(double x = 0.0, double y = 0.0) {
         glBindTexture(GL_TEXTURE_2D, textureId);
         glBegin(GL_QUADS);
         glTexCoord2d(0.0, 0.0);
-        glVertex3d(0.0, 0.0, 0.0);
+        glVertex3d(x, y, 0.0);
         glTexCoord2d(1.0, 0.0);
-        glVertex3d(fontWidth, 0.0, 0.0);
+        glVertex3d(x + fontWidth, y, 0.0);
         glTexCoord2d(1.0, 1.0);
-        glVertex3d(fontWidth, fontHeight, 0.0);
+        glVertex3d(x + fontWidth, y + fontHeight, 0.0);
         glTexCoord2d(0.0, 1.0);
-        glVertex3d(0.0, fontHeight, 0.0);
+        glVertex3d(x, y + fontHeight, 0.0);
         glEnd();
+    }
+
+    double GetFontWidth() {
+        return fontWidth;
+    }
+
+    double GetFontHeight() {
+        return fontHeight;
     }
 };
 }  // namespace GEngine

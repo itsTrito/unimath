@@ -1,6 +1,9 @@
 #ifndef TEST_SCENE_HPP
 #define TEST_SCENE_HPP
 
+#include "../components/BoxCollider.hpp"
+#include "../components/Collider.hpp"
+#include "../components/Ray.hpp"
 #include "../components/RigidBody.hpp"
 #include "../components/TexturedMesh.hpp"
 #include "../core/GameObject.hpp"
@@ -16,12 +19,16 @@ namespace GEngineExample {
 class TestScene : public Scene {
    public:
     TestScene() {
-        RigidBody* rb = new RigidBody(0.5);
-        rb->ApplyConstraint(PhysicsConstraint(Vector3D(0, 9.81 * 0.5, 0)));
-        GameObject go = GameObject(new Transform(Vector3D(0, 2, -5)), {GameObject()}, {new TexturedMesh("../res/monkey.obj", "../res/crate.png"), rb});
-        CubePreset cube = CubePreset(new Transform(Vector3D(0, -2, -5), Vector3D::Zero(), Vector3D(5, 0.2, 5)));
+        GameObject monkey1 = GameObject(new Transform(Vector3D(-2, 2, -5)), {}, {new TexturedMesh("../res/monkey.obj", "../res/crate.png"), new RigidBody(0.1, Vector3D::Right() * 5), new BoxCollider()});
+        GameObject monkey2 = GameObject(new Transform(Vector3D(0, 2, -5), Vector3D(0, 0, 0), Vector3D(1, 1, 1)), {}, {new TexturedMesh("../res/monkey.obj", "../res/crate.png"), new RigidBody(0.1, Vector3D::Left() * 5), new BoxCollider()});
+        GameObject monkey3 = GameObject(new Transform(Vector3D(2, 2, -5)), {}, {new TexturedMesh("../res/monkey.obj", "../res/crate.png"), new RigidBody(0.1), new BoxCollider()});
+        CubePreset cube = CubePreset(new Transform(Vector3D(0, 0, -5), Vector3D(0, 0, 0), Vector3D(25, 1, 25)));
+        GameObject ray = GameObject(new Transform(Vector3D(1, 1, -1)), {}, {new Ray(Vector3D(1, 2, -1), Color(0.5, 1, 0.5, 1)), new Transformer()});
         this->addGameObject(cube);
-        this->addGameObject(go);
+        this->addGameObject(monkey1);
+        this->addGameObject(monkey2);
+        // this->addGameObject(monkey3);
+        //  this->addGameObject(ray);
     }
 };
 }  // namespace GEngineExample

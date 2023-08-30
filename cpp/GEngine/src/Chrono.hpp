@@ -29,6 +29,11 @@ class Chrono {
         return duration_cast<nanoseconds>(steady_clock::now() - lastTick).count() / NANOSECOND_TO_SECOND;
     }
 
+    double FramePerSecondInstant() {
+        double ellapsedTime = EllapsedTime();
+        return 1 / ellapsedTime;
+    }
+
     double FramePerSecond(float frameReset = 1.0f) {
         if ((steady_clock::now() - lastFPSTick) >= duration<float>(frameReset)) {
             double multiplier = 1.0f / frameReset;

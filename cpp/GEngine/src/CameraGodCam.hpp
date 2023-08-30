@@ -111,20 +111,6 @@ class CameraGodCam : public Camera3D {
 
         updateCameraAngle = true;
     }
-
-    bool Clamp(double* value, double min, double max) {
-        bool clamper = false;
-        if (*value > max) {
-            *value = max;
-            clamper = true;
-        }
-        if (*value < min) {
-            *value = min;
-            clamper = true;
-        }
-
-        return clamper;
-    }
 };
 }  // namespace GEngine
 #endif

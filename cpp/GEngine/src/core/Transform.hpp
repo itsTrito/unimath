@@ -2,6 +2,7 @@
 #define TRANSFORM_HPP
 
 #include "../design/Observer_Observable.hpp"
+#include "../math/MathUtils.hpp"
 #include "../math/Vector3D.hpp"
 
 namespace GEngine {
@@ -18,15 +19,19 @@ class Transform : public Observable {
         this->scale = scale;
     }
 
-    Vector3D getPosition() {
+    Vector3D GetPosition() {
         return position;
     }
 
-    Vector3D getRotation() {
+    Vector3D GetRotationRad() {
+        return Vector3D(MathUtils::DegToRad(rotation.x), MathUtils::DegToRad(rotation.y), MathUtils::DegToRad(rotation.z));
+    }
+
+    Vector3D GetRotation() {
         return rotation;
     }
 
-    Vector3D getScale() {
+    Vector3D GetScale() {
         return scale;
     }
 
@@ -40,8 +45,13 @@ class Transform : public Observable {
         this->Notify();
     }
 
-    void Rotate(double xAngle, double yAngle, double zAngle) {
-        this->rotation += Vector3D(xAngle, yAngle, zAngle);
+    void RotateRad(double xAngleRad, double yAngleRad, double zAngleRad) {
+        this->rotation += Vector3D(MathUtils::RadToDeg(xAngleRad), MathUtils::RadToDeg(yAngleRad), MathUtils::RadToDeg(zAngleRad));
+        this->Notify();
+    }
+
+    void Rotate(double xAngleDeg, double yAngleDeg, double zAngleDeg) {
+        this->rotation += Vector3D(xAngleDeg, yAngleDeg, zAngleDeg);
         this->Notify();
     }
 

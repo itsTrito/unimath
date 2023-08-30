@@ -11,20 +11,20 @@ class Handler : public Singleton<H> {
     std::map<Scene*, std::vector<C*>> components;
 
    public:
-    void SetCurrentScene(Scene* scene) {
+    virtual void SetCurrentScene(Scene* scene) {
         this->currentScene = scene;
         if (components.find(scene) == components.end()) {
             components[scene] = std::vector<C*>();
         }
     }
 
-    void Subscribe(C* myComponent) {
+    virtual void Subscribe(C* myComponent) {
         if (currentScene != nullptr) {
             components[currentScene].push_back(myComponent);
         }
     }
 
-    void Unsubscribe(C* myComponent) {
+    virtual void Unsubscribe(C* myComponent) {
         if (currentScene != nullptr) {
             int i = 0;
             int indexToRemove = -1;
@@ -40,7 +40,7 @@ class Handler : public Singleton<H> {
         }
     }
 
-    void ClearCurrentScene() {
+    virtual void ClearCurrentScene() {
         if (currentScene == nullptr) {
             return;
         }

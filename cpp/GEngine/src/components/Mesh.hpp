@@ -33,6 +33,7 @@ class Mesh : public RenderComponent {
     void Init() {
         RenderHandler::GetInstance().Subscribe(this);
         Load();
+        SetMeshScale();
         this->GetGameObjectTransform()->AddObserver(this);
     }
 
@@ -98,39 +99,61 @@ class Mesh : public RenderComponent {
     }
 
     void Notification() {
-        Vector3D newScale = this->GetGameObjectTransform()->getScale();
-        Vector3D movement = this->GetGameObjectTransform()->getPosition() - this->lastTransform.getPosition();
-        Vector3D rotationChange = this->GetGameObjectTransform()->getRotation() - this->lastTransform.getRotation();
-        Vector3D scaleChange = newScale - lastTransform.getScale();
+        Vector3D newScale = this->GetGameObjectTransform()->GetScale();
+        Vector3D movement = this->GetGameObjectTransform()->GetPosition() - this->lastTransform.GetPosition();
+        Vector3D rotationChange = this->GetGameObjectTransform()->GetRotationRad() - this->lastTransform.GetRotationRad();
+        Vector3D scaleChange = newScale - lastTransform.GetScale();
 
         if (movement.GetNorm() > 0) {
             this->Translate(movement);
         }
 
-        if (rotationChange.GetNorm() > 0) {
-            Matrix44D rotation = Matrix44D();
-            if (abs(rotationChange.x) > 0) {
-                double test = MathUtils::degToRad(rotationChange.x);
-                rotation.LoadRotationX(test);
-                this->Transform(rotation, this->GetGameObjectTransform()->getPosition());
-            }
-            if (abs(rotationChange.y) > 0) {
-                rotation.LoadRotationY(rotationChange.y);
-                this->Transform(rotation, this->GetGameObjectTransform()->getPosition());
-            }
-            if (abs(rotationChange.z) > 0) {
-                rotation.LoadRotationZ(rotationChange.z);
-                this->Transform(rotation, this->GetGameObjectTransform()->getPosition());
-            }
-        }
-
         if (scaleChange.GetNorm() > 0) {
             Matrix44D scale = Matrix44D();
             scale.LoadScale(newScale.x, newScale.y, newScale.z);
-            this->Transform(scale, this->GetGameObjectTransform()->getPosition());
+            this->Transform(scale, this->GetGameObjectTransform()->GetPosition());
+        }
+
+        if (rotationChange.GetNorm() > 0) {
+            Matrix44D rotation = Matrix44D();
+            if (abs(rotationChange.x) > 0) {
+                rotation.LoadRotationX(rotationChange.x);
+                this->Transform(rotation, this->GetGameObjectTransform()->GetPosition());
+            }
+            if (abs(rotationChange.y) > 0) {
+                rotation.LoadRotationY(rotationChange.y);
+                this->Transform(rotation, this->GetGameObjectTransform()->GetPosition());
+            }
+            if (abs(rotationChange.z) > 0) {
+                rotation.LoadRotationZ(rotationChange.z);
+                this->Transform(rotation, this->GetGameObjectTransform()->GetPosition());
+            }
         }
 
         this->lastTransform = *this->GetGameObjectTransform();
+    }
+
+    void SetMeshScale() {
+        double max[] = {0.0,
+                        0.0,
+                        0.0};
+
+        double min[] = {0.0,
+                        0.0,
+                        0.0};
+
+        for (int i = 0; i < vertexCount * VERTEX_LENGHT; i++) {
+            int tabIndex = i % VERTEX_LENGHT;
+            max[tabIndex] = std::max(verticies[i], max[tabIndex]);
+            min[tabIndex] = std::min(verticies[i], min[tabIndex]);
+        }
+
+        Vector3D currentScale = GetGameObjectTransform()->GetScale();
+        Vector3D meshScale = Vector3D(max[0] - min[0], max[1] - min[1], max[2] - min[2]);
+        Vector3D meshScaleRatio = Vector3D(1 / meshScale.x, 1 / meshScale.y, 1 / meshScale.z);
+        Matrix44D scale;
+        scale.LoadScale(meshScaleRatio.x, meshScaleRatio.y, meshScaleRatio.z);
+        this->Transform(scale);
     }
 
     virtual void Load() = 0;

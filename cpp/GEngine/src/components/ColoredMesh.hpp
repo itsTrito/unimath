@@ -83,7 +83,7 @@ class ColoredMesh : public Mesh {
         }
     }
 
-    void Render() {
+    void Render(RenderConfig config) {
         glDisable(GL_TEXTURE_2D);
         // Activer transparence
         glEnable(GL_BLEND);
@@ -91,11 +91,15 @@ class ColoredMesh : public Mesh {
         glColor4d(color.getR(), color.getG(), color.getB(), color.getA());
         glEnableClientState(GL_VERTEX_ARRAY);
         glVertexPointer(3, GL_DOUBLE, 0, verticies);
-        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        if (config.drawLines) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
         glDrawArrays(GL_TRIANGLES, 0, vertexCount);
         glDisableClientState(GL_VERTEX_ARRAY);
         glEnable(GL_TEXTURE_2D);
-        // glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        if (config.drawLines) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
         glColor4d(1.0, 1.0, 1.0, 1.0);
     }
 };

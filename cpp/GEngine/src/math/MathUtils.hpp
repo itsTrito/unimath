@@ -6,12 +6,21 @@
 namespace GEngine {
 class MathUtils {
    public:
-    static double degToRad(double angleDeg) {
-        return angleDeg / 180 * M_PI;
+    static double RadToDeg(double angleRad) {
+        return (angleRad * 180) / M_PI;
     }
 
-    static double radToDeg(double angleRad) {
-        return angleRad / M_PI * 180;
+    static double DegToRad(double angleDeg) {
+        return (angleDeg * M_PI) / 180;
+    }
+
+    static double Clamp(double value, double min, double max) {
+        if (value > max) {
+            value = max;
+        } else if (value < min) {
+            value = min;
+        }
+        return value;
     }
 };
 

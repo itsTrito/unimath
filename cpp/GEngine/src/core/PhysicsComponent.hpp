@@ -8,7 +8,9 @@ namespace GEngine {
 class PhysicsComponent : public Component {
    public:
     virtual void Evaluate(double deltaTime) = 0;
+    virtual void DetectInteractions(vector<PhysicsComponent*> others, int index) = 0;
     virtual void ApplyConstraint(PhysicsConstraint constraint) = 0;
+    virtual bool IsRigidBody() = 0;
 };
 
 }  // namespace GEngine

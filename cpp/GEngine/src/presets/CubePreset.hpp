@@ -10,7 +10,7 @@
 namespace GEngine {
 class CubePreset : public GameObject {
    public:
-    CubePreset(Transform* transform = new Transform()) : GameObject(transform, {}, {new ColoredMesh("../res/box.obj", Color(111, 78, 55, (Uint8)255))}) {}
+    CubePreset(Transform* transform = new Transform()) : GameObject(transform, {}, {new ColoredMesh("../res/box.obj", Color(111, 78, 55, (Uint8)255)), new BoxCollider()}) {}
 };
 }  // namespace GEngine
 

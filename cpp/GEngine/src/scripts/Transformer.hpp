@@ -11,12 +11,18 @@ using namespace GEngine;
 namespace GEngineExample {
 class Transformer : public Component {
    public:
+    double cumulative = 0;
     Transformer() {}
 
     void Update(double deltaTime) {
-        double angle = 0.05;
-        GetGameObjectTransform()->Translate(0.001, 0, 0);
-        GetGameObjectTransform()->Rotate(angle, 0, angle);
+        double angle = 1;
+        double maxAngle = 400000000000;
+        // GetGameObjectTransform()->Translate(0.001, 0, 0);
+        if (cumulative < maxAngle) {
+            GetGameObjectTransform()->Rotate(0, 0, angle);
+            cumulative += std::min(angle, maxAngle - cumulative);
+            Debugger::GetInstance().Set("rot", "Rotation: " + GetGameObjectTransform()->GetRotation().toString());
+        }
     }
 };
 }  // namespace GEngineExample

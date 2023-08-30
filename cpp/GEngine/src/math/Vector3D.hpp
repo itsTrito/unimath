@@ -52,9 +52,17 @@ class Vector3D {
      */
     void Normalize() {
         double norm = this->GetNorm();
-        this->x /= norm;
-        this->y /= norm;
-        this->z /= norm;
+        if (norm != 0) {
+            this->x /= norm;
+            this->y /= norm;
+            this->z /= norm;
+        }
+    }
+
+    Vector3D GetNormalized() {
+        Vector3D copy = Vector3D(x, y, z);
+        copy.Normalize();
+        return copy;
     }
 
     /**
@@ -105,6 +113,16 @@ class Vector3D {
     }
 
     /**
+     * @brief Effectue la division par un scalaire
+     *
+     * @param s Le scalaire par lequel on divise notre norme
+     * @return Le nouveau vecteur divisé par le scalaire
+     */
+    Vector3D operator/(double s) {
+        return Vector3D(this->x / s, this->y / s, this->z / s);
+    }
+
+    /**
      * @brief Effectue le produit vectorielle
      *
      * @param v Le vecteur sur lequel on veut effectuer le produit vectorielle
@@ -147,6 +165,35 @@ class Vector3D {
 
     Vector3D JustY() {
         return Vector3D(0.0, this->y, 0.0);
+    }
+
+    Vector3D JustX() {
+        return Vector3D(x, 0, 0);
+    }
+
+    Vector3D JustZ() {
+        return Vector3D(0, 0, z);
+    }
+
+    Vector3D BiggestDimension() {
+        Vector3D copy = Vector3D(x, y, z);
+        double absX = abs(x);
+        double absY = abs(y);
+        double absZ = abs(z);
+
+        if (absX < absY || absX < absZ) {
+            copy.x = 0;
+        }
+
+        if (absY < absX || absY < absZ) {
+            copy.y = 0;
+        }
+
+        if (absZ < absX || absZ < absY) {
+            copy.z = 0;
+        }
+
+        return copy;
     }
 
     static inline Vector3D Zero() {

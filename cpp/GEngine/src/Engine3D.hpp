@@ -13,6 +13,7 @@
 #include "components/TexturedMesh.hpp"
 #include "core/GameObject.hpp"
 #include "core/Scene.hpp"
+#include "debug/Debugger.hpp"
 #include "handlers/PhysicsHandler.hpp"
 #include "handlers/RenderHandler.hpp"
 #include "math/Matrix44D.hpp"
@@ -28,7 +29,6 @@ class Engine3D : public Engine<Engine3D> {
     CameraGodCam cam;
     EventDispatcher eventDispatcher;
     Chrono chrono;
-    Text framecounter = Text("FPS : " + to_string(chrono.FramePerSecond()), "../res/monogram.ttf", 20);
 
    public:
     Engine3D() {
@@ -66,6 +66,9 @@ class Engine3D : public Engine<Engine3D> {
         RenderHandler::GetInstance().SetCurrentScene(&scene);
         PhysicsHandler::GetInstance().SetCurrentScene(&scene);
 
+        Debugger::GetInstance().SetDrawGrid(true);
+        Debugger::GetInstance().SetDrawAxisOnly(true);
+
         scene.Init();
         scene.Start();
 
@@ -85,19 +88,13 @@ class Engine3D : public Engine<Engine3D> {
             }
 
             // TODO changer
-            double deltaTime = chrono.EllapsedTime();
+            double deltaTime = MathUtils::Clamp(chrono.EllapsedTime(), 0, 1);
+            double frameCount = chrono.FramePerSecond(0.1);
             chrono.Reset();
             cam.Update(deltaTime);
 
             // 3d
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            glMatrixMode(GL_PROJECTION);
-            glLoadIdentity();
-            glMultMatrixd(perspectiveProjection.matrix);
-
-            glMatrixMode(GL_MODELVIEW);
-            glLoadIdentity();
-
+            Enable3D(perspectiveProjection);
             cam.ApplyView();
             // cam.DrawRay();
 
@@ -107,27 +104,40 @@ class Engine3D : public Engine<Engine3D> {
             PhysicsHandler::GetInstance().Evaluate(deltaTime);
             scene.LateUpdate(deltaTime);
             RenderHandler::GetInstance().Render();
+            Debugger::GetInstance().DrawRenderables();
 
             // glEnable(GL_TEXTURE_2D);
             // 2d
+            Enable2D(orthogonalProjection);
 
-            glMatrixMode(GL_PROJECTION);
-            glLoadIdentity();
-            glMultMatrixd(orthogonalProjection.matrix);
-            // glOrtho(0.0,1000.0,1000.0,0.0,1.0,-1.0);
-
-            glMatrixMode(GL_MODELVIEW);
-            glLoadIdentity();
-
-            double frameCount = chrono.FramePerSecond(0.5f);
-            framecounter.Draw();
-            framecounter.SetText("FPS: " + to_string(frameCount));
+            Debugger::GetInstance().DrawPrints();
+            Debugger::GetInstance().Set("FPS", "FPS: " + to_string(frameCount));
 
             renderer.RenderUpdate();
         }
 
         scene.Quit();
         scene.Destroy();
+    }
+
+    void Enable3D(Matrix44D perspectiveMatrix) {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glMultMatrixd(perspectiveMatrix.matrix);
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+    }
+
+    void Enable2D(Matrix44D orthogonalMatrix) {
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glMultMatrixd(orthogonalMatrix.matrix);
+        // glOrtho(0.0,1000.0,1000.0,0.0,1.0,-1.0);
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
     }
 
     // glDisable(GL_TEXTURE_2D);

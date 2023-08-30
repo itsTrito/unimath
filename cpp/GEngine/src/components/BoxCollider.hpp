@@ -280,7 +280,7 @@ class BoxCollider : public Collider {
         Vector3D newDistance = normalOrientation1 * (normalOrientation1 * distance);
         Vector3D newDistanceNormalized = newDistance.GetNormalized();
 
-        Debugger::GetInstance().SetRenderComponent("testRayDistance", new GEngine::Transform(pos1), new Ray(pos2, Color(0.8, 0.2, 0.8, 1)));
+        Debugger::GetInstance().SetRenderComponent("testRayDistance", new GEngine::Transform(pos1), new Ray(pos2, Color(1.0, 0.5, 1.0, 1)));
         Debugger::GetInstance().SetRenderComponent("testRayDistance26", new GEngine::Transform(pos1), new Ray(pos1 + newDistance, Color(0.8, 0.8, 0.8, 1)));
 
         double newRadius1 = abs(scale1Rotated * normalOrientation1);

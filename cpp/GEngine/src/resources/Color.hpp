@@ -65,7 +65,7 @@ class Color {
      * \brief Accesseur de la variante rouge
      * \return Variante rouge
      */
-    inline double getR() const {
+    inline double GetR() const {
         return r;
     }
 
@@ -73,7 +73,7 @@ class Color {
      * \brief Accesseur de la variante verte
      * \return Variante verte
      */
-    inline double getG() const {
+    inline double GetG() const {
         return g;
     }
 
@@ -81,7 +81,7 @@ class Color {
      * \brief Accesseur de la variante bleu
      * \return Variante bleu
      */
-    inline double getB() const {
+    inline double GetB() const {
         return b;
     }
 
@@ -89,8 +89,12 @@ class Color {
      * \brief Accesseur de la variante alpha
      * \return Variante alpha
      */
-    inline double getA() const {
+    inline double GetA() const {
         return a;
+    }
+
+    inline Color WithA(double a) {
+        return Color(r, g, b, a);
     }
 
     /**
@@ -106,6 +110,58 @@ class Color {
 
     inline bool operator!=(const Color& other) const {
         return !(*this == other);
+    }
+};
+
+class Colors {
+   public:
+    static inline Color AQUA() {
+        return Color(0.0, 1.0, 1.0, 1.0);
+    }
+    static inline Color BLACK() {
+        return Color(0.0, 0.0, 0.0, 1.0);
+    }
+    static inline Color BLUE() {
+        return Color(0.0, 0.0, 1.0, 1.0);
+    }
+    static inline Color GREEN() {
+        return Color(0.0, 0.5, 0.0, 1.0);
+    }
+    static inline Color GREY() {
+        return Color(0.5, 0.5, 0.5, 1.0);
+    }
+    static inline Color LIME() {
+        return Color(0.0, 1.0, 0.0, 1.0);
+    }
+    static inline Color MAROON() {
+        return Color(0.5, 0.0, 0.0, 1.0);
+    }
+    static inline Color NAVY() {
+        return Color(0.0, 0.0, 0.5, 1.0);
+    }
+    static inline Color OLIVE() {
+        return Color(0.5, 0.5, 0.0, 1.0);
+    }
+    static inline Color ORANGE() {
+        return Color(1.0, 0.5, 0.0, 1.0);
+    }
+    static inline Color PINK() {
+        return Color(1.0, 0.5, 1.0, 1.0);
+    }
+    static inline Color PURPLE() {
+        return Color(1.0, 0.0, 1.0, 1.0);
+    }
+    static inline Color RED() {
+        return Color(1.0, 0.0, 0.0, 1.0);
+    }
+    static inline Color TEAL() {
+        return Color(0.0, 0.5, 0.5, 1.0);
+    }
+    static inline Color WHITE() {
+        return Color(1.0, 1.0, 1.0, 1.0);
+    }
+    static inline Color YELLOW() {
+        return Color(1.0, 1.0, 0.0, 1.0);
     }
 };
 

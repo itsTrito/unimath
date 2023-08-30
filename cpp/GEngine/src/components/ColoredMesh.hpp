@@ -88,7 +88,7 @@ class ColoredMesh : public Mesh {
         // Activer transparence
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glColor4d(color.getR(), color.getG(), color.getB(), color.getA());
+        glColor4d(color.GetR(), color.GetG(), color.GetB(), color.GetA());
         glEnableClientState(GL_VERTEX_ARRAY);
         glVertexPointer(3, GL_DOUBLE, 0, verticies);
         if (config.drawLines) {

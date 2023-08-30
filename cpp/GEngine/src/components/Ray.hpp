@@ -60,7 +60,7 @@ class Ray : public RenderComponent {
         glDisable(GL_TEXTURE_2D);
         Vector3D position = GetGameObjectTransform()->GetPosition();
         glBegin(GL_LINES);
-        glColor4d(color.getR(), color.getG(), color.getB(), color.getA());
+        glColor4d(color.GetR(), color.GetG(), color.GetB(), color.GetA());
 
         glVertex3d(position.x, position.y, position.z);
         glVertex3d(target.x, target.y, target.z);

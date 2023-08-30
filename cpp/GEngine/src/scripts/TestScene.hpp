@@ -19,7 +19,7 @@ namespace GEngineExample {
 class TestScene : public Scene {
    public:
     TestScene() {
-        GameObject monkey1 = GameObject(new Transform(Vector3D(-2, 2, -5)), {}, {new TexturedMesh("../res/monkey.obj", "../res/crate.png"), new RigidBody(0.1, Vector3D::Right() * 5), new BoxCollider()});
+        GameObject monkey1 = GameObject(new Transform(Vector3D(-2, 2, -5)), {}, {new TexturedMesh("../res/monkey.obj", "../res/crate.png"), new RigidBody(0.1), new BoxCollider()});
         GameObject monkey2 = GameObject(new Transform(Vector3D(0, 2, -5), Vector3D(0, 0, 0), Vector3D(1, 1, 1)), {}, {new TexturedMesh("../res/monkey.obj", "../res/crate.png"), new RigidBody(0.1, Vector3D::Left() * 5), new BoxCollider()});
         GameObject monkey3 = GameObject(new Transform(Vector3D(2, 2, -5)), {}, {new TexturedMesh("../res/monkey.obj", "../res/crate.png"), new RigidBody(0.1), new BoxCollider()});
         CubePreset cube = CubePreset(new Transform(Vector3D(0, 0, -5), Vector3D(0, 0, 0), Vector3D(25, 1, 25)));

@@ -93,7 +93,7 @@ class Debugger : public Singleton<Debugger> {
 
     void DrawLine(Vector3D start, Vector3D end, Color color) {
         glBegin(GL_LINES);
-        glColor4d(color.getR(), color.getG(), color.getB(), color.getA());
+        glColor4d(color.GetR(), color.GetG(), color.GetB(), color.GetA());
 
         glVertex3d(start.x, start.y, start.z);
         glVertex3d(end.x, end.y, end.z);

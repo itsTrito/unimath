@@ -25,6 +25,9 @@ class Collider : public PhysicsComponent {
     void Init() {
         this->mesh->SetGameObjectTransform(this->GetGameObjectTransform());
         this->mesh->Init();
+        RenderConfig overrideConfig = RenderConfig();
+        overrideConfig.drawLines = true;
+        this->mesh->SetRenderConfig(overrideConfig);
         PhysicsHandler::GetInstance().Subscribe(this);
     }
 

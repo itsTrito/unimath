@@ -83,7 +83,8 @@ class ColoredMesh : public Mesh {
         }
     }
 
-    void Render(RenderConfig config) {
+    void Render(RenderConfig handlerConfig) {
+        RenderConfig config = this->configIsOverriden ? this->config : handlerConfig;
         glDisable(GL_TEXTURE_2D);
         // Activer transparence
         glEnable(GL_BLEND);

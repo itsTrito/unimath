@@ -162,7 +162,7 @@ class BoxCollider : public Collider {
         // Debugger::GetInstance().Set("scale2", "Scale2 2: " + scale2.toString());
 
         if (dNorm > r) {
-            Debugger::GetInstance().Set("return", "Return: Start");
+            // Debugger::GetInstance().Set("return", "Return: Start");
             return Vector3D::Zero();
         }
 
@@ -295,9 +295,9 @@ class BoxCollider : public Collider {
         double newDistanceNorm = newDistance.GetNorm();
         double newR = (newRadius1 + newRadius2) * 0.5;
 
-        Debugger::GetInstance().Set("distance", "Distance: " + to_string(newDistanceNorm));
-        Debugger::GetInstance().Set("dNormalized", "Distance normlized: " + newDistanceNormalized.toString());
-        Debugger::GetInstance().Set("radius", "Radius: " + to_string(newR));
+        // Debugger::GetInstance().Set("distance", "Distance: " + to_string(newDistanceNorm));
+        // Debugger::GetInstance().Set("dNormalized", "Distance normlized: " + newDistanceNormalized.toString());
+        // Debugger::GetInstance().Set("radius", "Radius: " + to_string(newR));
 
         // Vector3D closestFace;
         // int i = 0;
@@ -309,7 +309,7 @@ class BoxCollider : public Collider {
         // }
 
         if (newDistanceNorm > newR) {
-            Debugger::GetInstance().Set("return", "Return: Before End");
+            // Debugger::GetInstance().Set("return", "Return: Before End");
             return Vector3D::Zero();
         }
 
@@ -318,7 +318,7 @@ class BoxCollider : public Collider {
         overlap = (newR - newDistanceNorm);
         Debugger::GetInstance().Set("overlap", "Overlap: " + to_string(overlap));
 
-        Debugger::GetInstance().Set("return", "Return: End");
+        // Debugger::GetInstance().Set("return", "Return: End");
 
         return newDistanceNormalized * overlap;
     }

@@ -21,7 +21,7 @@ class RenderHandler : public Handler<RenderHandler, RenderComponent> {
             return;
         }
 
-        config.drawLines = true;
+        config.drawLines = false;
 
         std::vector<RenderComponent*> currentSceneRenderComponents = components[currentScene];
         for (RenderComponent* component : currentSceneRenderComponents) {

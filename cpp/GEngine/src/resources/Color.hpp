@@ -26,10 +26,10 @@ class Color {
 
    public:
     Color(double r, double g, double b, double a) {
-        this->r = r % 1.0;
-        this->g = g % 1.0;
-        this->b = b % 1.0;
-        this->a = a % 1.0;
+        this->r = r;
+        this->g = g;
+        this->b = b;
+        this->a = a;
     }
 
     Color(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {

@@ -44,8 +44,8 @@ class Debugger : public Singleton<Debugger> {
                 frontMax.x = i;
                 DrawLine(backMax, frontMax, Color(1.0, 1.0, 1.0, 0.3));
             }
-            glEnable(GL_TEXTURE_2D);
         }
+        glEnable(GL_TEXTURE_2D);
     }
 
    public:

@@ -67,7 +67,6 @@ class Engine3D : public Engine<Engine3D> {
         PhysicsHandler::GetInstance().SetCurrentScene(&scene);
 
         Debugger::GetInstance().SetDrawGrid(true);
-        Debugger::GetInstance().SetDrawAxisOnly(true);
 
         scene.Init();
         scene.Start();

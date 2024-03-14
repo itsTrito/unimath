@@ -1,20 +1,20 @@
 package unimath.algebra;
 
-public class Term<T extends Number> extends AlgebraUnit<T> {
+public class Term extends AlgebraUnit {
 
-    private final T value;
+    private final String value;
 
-    public Term(T value) {
+    public Term(String value) {
         this.value = value;
     }
 
     @Override
-    public T computeValue() {
+    public String computeValue() {
         return value;
     }
 
     @Override
     public String toString() {
-        return value.toString();
+        return value;
     }
 }

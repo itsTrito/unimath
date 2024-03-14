@@ -1,5 +1,5 @@
 package unimath.algebra;
 
-public abstract class AlgebraUnit<T extends Number> {
-    public abstract T computeValue();
+public abstract class AlgebraUnit {
+    public abstract String computeValue();
 }

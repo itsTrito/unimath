@@ -1,41 +1,21 @@
 package unimath.algebra;
 
-public class Subtraction<T extends Number> extends AlgebraUnit<T> {
-    private final AlgebraUnit<T> a;
-    private final AlgebraUnit<T> b;
+public class Subtraction extends AlgebraUnit {
+    private final AlgebraUnit a;
+    private final AlgebraUnit b;
 
-    public Subtraction(AlgebraUnit<T> a, AlgebraUnit<T> b) {
+    public Subtraction(AlgebraUnit a, AlgebraUnit b) {
         this.a = a;
         this.b = b;
     }
 
     @Override
-    public T computeValue() {
-        return difference(a.computeValue(), b.computeValue());
+    public String computeValue() {
+        return Float.toString(Float.parseFloat(a.computeValue()) - Float.parseFloat(b.computeValue()));
     }
 
     @Override
     public String toString() {
         return String.format("%s - %s", a.toString(), b.toString());
-    }
-
-    private static <T extends Number>T difference(T a, T b) {
-        if (a instanceof Long) {
-            return (T)(Long) (a.longValue() - b.longValue());
-        }
-        if (a instanceof Short) {
-            return (T)(Integer) (a.shortValue() - b.shortValue());
-        }
-        if (a instanceof Float) {
-            return (T)(Float) (a.floatValue() - b.floatValue());
-        }
-        if (a instanceof Double) {
-            return (T)(Double) (a.doubleValue() - b.doubleValue());
-        }
-        if (a instanceof Byte) {
-            return (T)(Integer) (a.byteValue() - b.byteValue());
-        }
-
-        return (T)(Integer) (a.intValue() - b.intValue());
     }
 }
